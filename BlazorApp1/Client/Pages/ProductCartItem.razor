@@ -1,0 +1,35 @@
+
+@using Blazor.Shared
+
+@if (product == null)
+{
+    <p>loading...</p>
+}
+else
+{
+    var buttonText = IsInCart ? "Update" : "Add";
+
+    <td>@product.Title</td>
+    <td>@product.Price</td>
+    <td>
+        <EditForm Model="@product" OnSubmit="@OnClick">
+            <InputNumber @bind-Value="@product.Quantity"></InputNumber>
+            <button type="submit">@buttonText</button>
+        </EditForm>
+    </td>
+
+}
+@code {
+    [Parameter]
+    public ProductModel product { get; set; }
+
+    [Parameter]
+    public bool IsInCart { get; set; }
+
+    [Parameter]
+    public Action OnClick { get; set; }
+
+
+
+
+}

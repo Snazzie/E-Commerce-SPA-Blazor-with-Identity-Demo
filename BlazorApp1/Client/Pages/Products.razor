@@ -1,0 +1,113 @@
+@page "/products"
+@using Blazor.Shared
+@inject HttpClient Http
+<h3>Products</h3>
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                var isInCart = IsInCart(product.Sku);
+                <tr>
+
+
+                    <ProductCartItem product="@product" IsInCart="isInCart" OnClick="@(() => UpdateCart(product.Sku, product.Quantity))" />
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h3>Cart</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Quanitity</th>
+                <th>Price</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in cart)
+            {
+                double price = product.Value.Price * product.Value.Quantity;
+                <tr>
+                    <td>@product.Value.Title</td>
+                    <td>@product.Value.Quantity</td>
+                    <td>$@price </td>
+                    <td><button @onclick="@(e => RemoveFromCart(product.Key))">Remove</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+
+    List<ProductModel> cartItems;
+    ProductModel[] products;
+    Dictionary<string, ProductModel> cart = new Dictionary<string, ProductModel>();
+
+    public AddToCartModel addToCartModel = new AddToCartModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await Http.GetJsonAsync<ProductModel[]>("api/Products/Products");
+
+    }
+
+    private bool IsInCart(string sku)
+    {
+        return cart.ContainsKey(sku);
+    }
+
+    public void UpdateCart(string sku, int quantity)
+    {
+        if (quantity > 0)
+        {
+            if (!IsInCart(sku))
+            {
+                AddToCart(sku, quantity);
+            }
+            else
+            {
+                cart[sku].Quantity = quantity;
+            }
+        }
+        else
+        {
+            RemoveFromCart(sku);
+        }
+        base.StateHasChanged();
+    }
+    private void AddToCart(string sku, int quantity)
+    {
+        var product = products.First(p => p.Sku == sku);
+
+        if (!cart.ContainsKey(sku))
+            cart.Add(sku, product);
+
+
+        base.StateHasChanged();
+    }
+
+
+
+    private void RemoveFromCart(string sku)
+    {
+        if (cart.ContainsKey(sku))
+            cart.Remove(sku);
+    }
+
+
+}
