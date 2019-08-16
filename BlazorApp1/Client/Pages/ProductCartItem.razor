@@ -10,7 +10,7 @@ else
     var buttonText = IsInCart ? "Update" : "Add";
 
     <td>@product.Title</td>
-    <td>@product.Price</td>
+    <td>$@product.Price</td>
     <td>
         <EditForm Model="@product" OnSubmit="@OnClick">
             <InputNumber @bind-Value="@product.Quantity"></InputNumber>

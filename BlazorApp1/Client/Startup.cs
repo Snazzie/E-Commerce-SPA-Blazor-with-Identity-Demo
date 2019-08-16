@@ -1,3 +1,4 @@
+using Blazor.Extensions.Storage;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,6 +8,7 @@ namespace BlazorApp1.Client
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddStorage();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

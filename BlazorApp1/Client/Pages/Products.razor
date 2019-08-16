@@ -1,6 +1,8 @@
 @page "/products"
 @using Blazor.Shared
 @inject HttpClient Http
+@inject Blazor.Extensions.Storage.SessionStorage sessionStorage
+
 <h3>Products</h3>
 @if (products == null)
 {
@@ -59,9 +61,18 @@ else
     Dictionary<string, ProductModel> cart = new Dictionary<string, ProductModel>();
 
     public AddToCartModel addToCartModel = new AddToCartModel();
+    string cartKey = "cartItems";
 
     protected override async Task OnInitializedAsync()
     {
+
+
+        Dictionary<string, ProductModel> fromSession = await sessionStorage.GetItem<Dictionary<string, ProductModel>>(cartKey);
+
+        if(fromSession != null)
+        cart = fromSession;
+
+
         products = await Http.GetJsonAsync<ProductModel[]>("api/Products/Products");
 
     }
@@ -71,7 +82,7 @@ else
         return cart.ContainsKey(sku);
     }
 
-    public void UpdateCart(string sku, int quantity)
+    public async void UpdateCart(string sku, int quantity)
     {
         if (quantity > 0)
         {
@@ -88,6 +99,9 @@ else
         {
             RemoveFromCart(sku);
         }
+
+        await sessionStorage.SetItem<Dictionary<string, ProductModel>>(cartKey, cart);
+
         base.StateHasChanged();
     }
     private void AddToCart(string sku, int quantity)
@@ -100,8 +114,6 @@ else
 
         base.StateHasChanged();
     }
-
-
 
     private void RemoveFromCart(string sku)
     {
