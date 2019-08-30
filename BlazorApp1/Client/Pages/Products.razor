@@ -3,8 +3,6 @@
 @inject HttpClient Http
 @inject Blazor.Extensions.Storage.SessionStorage sessionStorage
 
-
-
 <style>
     .products-container {
         display: grid;
@@ -13,6 +11,7 @@
         justify-content: space-evenly;
     }
 </style>
+
 <h3>Products</h3>
 @if (products == null)
 {
@@ -73,8 +72,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-
-
         Dictionary<string, CartItemModel> fromSession = await sessionStorage.GetItem<Dictionary<string, CartItemModel>>(cartKey);
 
         if (fromSession != null)
