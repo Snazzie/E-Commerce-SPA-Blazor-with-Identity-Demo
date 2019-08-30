@@ -79,7 +79,6 @@ else
 }
 @code {
 
-    List<ProductModel> cartItems;
     ProductModel[] products;
     List<ProductModel> cartProducts = new List<ProductModel>();
     Dictionary<string, CartItemModel> cart = new Dictionary<string, CartItemModel>();
@@ -120,7 +119,7 @@ else
         return cart.ContainsKey(sku);
     }
 
-    public async Task UpdateCart(string sku, int quantity)
+    public async void UpdateCart(string sku, int quantity)
     {
         if (quantity > 0)
         {
@@ -150,8 +149,6 @@ else
 
         if (!cart.ContainsKey(sku))
             cart.Add(sku, cartitemModel);
-
-        base.StateHasChanged();
     }
 
     private async Task UpdateCartProducts()
