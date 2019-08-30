@@ -1,7 +1,7 @@
 
 @using Blazor.Shared
 
-@if (product == null)
+@if (cartItemModel == null)
 {
     <p>loading...</p>
 }
@@ -9,19 +9,21 @@ else
 {
     var buttonText = IsInCart ? "Update" : "Add";
 
-    <td>@product.Title</td>
-    <td>$@product.Price</td>
+    <td>@cartItemModel.Product.Title</td>
+    <td>$@cartItemModel.Product.Price</td>
+    <td>@cartItemModel.Product.Quantity left</td>
     <td>
-        <EditForm Model="@product" OnSubmit="@OnClick">
-            <InputNumber @bind-Value="@product.Quantity"></InputNumber>
+        <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
+            <InputNumber @bind-Value="@cartItemModel.Quantity"></InputNumber>
             <button type="submit">@buttonText</button>
         </EditForm>
     </td>
 
 }
 @code {
+
     [Parameter]
-    public ProductModel product { get; set; }
+    public CartItemModel cartItemModel {get;set;}
 
     [Parameter]
     public bool IsInCart { get; set; }

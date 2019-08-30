@@ -1,0 +1,24 @@
+﻿{
+  "Products": [
+    {
+      "sku": "1",
+      "title": "Spoon",
+      "price": 2.0
+    },
+    {
+      "sku": "2",
+      "title": "Fork",
+      "price": 2.0
+    },
+    {
+      "sku": "3",
+      "title": "Knife",
+      "price": 2.0
+    },
+    {
+      "sku": "4",
+      "title": "Plate",
+      "price": 6.0
+    }
+  ]
+}

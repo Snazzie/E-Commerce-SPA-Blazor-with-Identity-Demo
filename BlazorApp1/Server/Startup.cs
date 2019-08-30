@@ -1,3 +1,4 @@
+using BlazorApp1.Server.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -20,6 +21,7 @@ namespace BlazorApp1.Server
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });
+            services.AddSingleton<ProductStore>(new ProductStore());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

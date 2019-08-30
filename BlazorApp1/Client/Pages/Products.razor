@@ -22,10 +22,18 @@ else
             @foreach (var product in products)
             {
                 var isInCart = IsInCart(product.Sku);
+                CartItemModel cartItem;
+                if (isInCart)
+                {
+                    cartItem = cart[product.Sku];
+                }
+                else
+                {
+                    cartItem = new CartItemModel() { Product = product };
+                }
+
                 <tr>
-
-
-                    <ProductCartItem product="@product" IsInCart="isInCart" OnClick="@(() => UpdateCart(product.Sku, product.Quantity))" />
+                    <ProductCartItem cartItemModel="@cartItem" IsInCart="isInCart" OnClick="@(() => UpdateCart(cartItem.Product.Sku, cartItem.Quantity))" />
                 </tr>
             }
         </tbody>
@@ -41,14 +49,14 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in cart)
+            @foreach (var cartItem in cart)
             {
-                double price = product.Value.Price * product.Value.Quantity;
+                double price = cartItem.Value.Product.Price * cartItem.Value.Quantity;
                 <tr>
-                    <td>@product.Value.Title</td>
-                    <td>@product.Value.Quantity</td>
+                    <td>@cartItem.Value.Product.Title</td>
+                    <td>@cartItem.Value.Quantity</td>
                     <td>$@price </td>
-                    <td><button @onclick="@(e => RemoveFromCart(product.Key))">Remove</button></td>
+                    <td><button @onclick="@(e => RemoveFromCart(cartItem.Key))">Remove</button></td>
                 </tr>
             }
         </tbody>
@@ -58,7 +66,7 @@ else
 
     List<ProductModel> cartItems;
     ProductModel[] products;
-    Dictionary<string, ProductModel> cart = new Dictionary<string, ProductModel>();
+    Dictionary<string, CartItemModel> cart = new Dictionary<string, CartItemModel>();
 
     public AddToCartModel addToCartModel = new AddToCartModel();
     string cartKey = "cartItems";
@@ -67,10 +75,10 @@ else
     {
 
 
-        Dictionary<string, ProductModel> fromSession = await sessionStorage.GetItem<Dictionary<string, ProductModel>>(cartKey);
+        Dictionary<string, CartItemModel> fromSession = await sessionStorage.GetItem<Dictionary<string, CartItemModel>>(cartKey);
 
         if(fromSession != null)
-        cart = fromSession;
+            cart = fromSession;
 
 
         products = await Http.GetJsonAsync<ProductModel[]>("api/Products/Products");
@@ -88,7 +96,8 @@ else
         {
             if (!IsInCart(sku))
             {
-                AddToCart(sku, quantity);
+                var product = products.First(p => p.Sku == sku);
+                AddToCart(sku, new CartItemModel() { Product = product, Quantity = quantity });
             }
             else
             {
@@ -100,16 +109,15 @@ else
             RemoveFromCart(sku);
         }
 
-        await sessionStorage.SetItem<Dictionary<string, ProductModel>>(cartKey, cart);
+        await sessionStorage.SetItem<Dictionary<string, CartItemModel>>(cartKey, cart);
 
         base.StateHasChanged();
     }
-    private void AddToCart(string sku, int quantity)
+    private void AddToCart(string sku, CartItemModel cartitemModel)
     {
-        var product = products.First(p => p.Sku == sku);
 
         if (!cart.ContainsKey(sku))
-            cart.Add(sku, product);
+            cart.Add(sku, cartitemModel);
 
 
         base.StateHasChanged();
