@@ -7,31 +7,37 @@
 }
 else
 {
+    <style>
+        .cart-item {
+            width: 80px;
+            height: auto;
+        }
+    </style>
+
+
     var buttonText = IsInCart ? "Update" : "Add";
-
-    <td>@cartItemModel.Product.Title</td>
-    <td>$@cartItemModel.Product.Price</td>
-    <td>@cartItemModel.Product.Quantity left</td>
-    <td>
-        <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
-            <InputNumber @bind-Value="@cartItemModel.Quantity"></InputNumber>
-            <button type="submit">@buttonText</button>
-        </EditForm>
-    </td>
-
+    <div class="cart-item">
+        <div>@Product.Title</div>
+        <div>$@Product.Price</div>
+        <div>@Product.Quantity left</div>
+        <div>
+            <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
+                <InputNumber @bind-Value="@cartItemModel.Quantity"></InputNumber>
+                <button type="submit">@buttonText</button>
+            </EditForm>
+        </div>
+    </div>
 }
 @code {
-
     [Parameter]
-    public CartItemModel cartItemModel {get;set;}
+    public ProductModel Product { get; set; }
+    [Parameter]
+    public CartItemModel cartItemModel { get; set; }
 
     [Parameter]
     public bool IsInCart { get; set; }
 
     [Parameter]
     public Action OnClick { get; set; }
-
-
-
 
 }

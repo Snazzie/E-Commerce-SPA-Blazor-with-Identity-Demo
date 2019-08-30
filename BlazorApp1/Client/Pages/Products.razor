@@ -3,6 +3,16 @@
 @inject HttpClient Http
 @inject Blazor.Extensions.Storage.SessionStorage sessionStorage
 
+
+
+<style>
+    .products-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,220px);
+        padding: 10px;
+        justify-content: space-evenly;
+    }
+</style>
 <h3>Products</h3>
 @if (products == null)
 {
@@ -10,34 +20,24 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Options</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in products)
+    <div class="products-container">
+        @foreach (var product in products)
+        {
+            var isInCart = IsInCart(product.Sku);
+            CartItemModel cartItem;
+            if (isInCart)
             {
-                var isInCart = IsInCart(product.Sku);
-                CartItemModel cartItem;
-                if (isInCart)
-                {
-                    cartItem = cart[product.Sku];
-                }
-                else
-                {
-                    cartItem = new CartItemModel() { Product = product };
-                }
-
-                <tr>
-                    <ProductCartItem cartItemModel="@cartItem" IsInCart="isInCart" OnClick="@(() => UpdateCart(cartItem.Product.Sku, cartItem.Quantity))" />
-                </tr>
+                cartItem = cart[product.Sku];
             }
-        </tbody>
-    </table>
+            else
+            {
+                cartItem = new CartItemModel() { ProductSku = product.Sku };
+            }
+
+            <ProductCartItem Product="product" cartItemModel="@cartItem" IsInCart="isInCart" OnClick="@(() => UpdateCart(product.Sku, cartItem.Quantity))" />
+        }
+    </div>
+
     <h3>Cart</h3>
     <table class="table">
         <thead>
@@ -51,9 +51,10 @@ else
         <tbody>
             @foreach (var cartItem in cart)
             {
-                double price = cartItem.Value.Product.Price * cartItem.Value.Quantity;
+                var product = products.Single(s => s.Sku == cartItem.Key);
+                double price = product.Price * cartItem.Value.Quantity;
                 <tr>
-                    <td>@cartItem.Value.Product.Title</td>
+                    <td>@product.Title</td>
                     <td>@cartItem.Value.Quantity</td>
                     <td>$@price </td>
                     <td><button @onclick="@(e => RemoveFromCart(cartItem.Key))">Remove</button></td>
@@ -68,7 +69,6 @@ else
     ProductModel[] products;
     Dictionary<string, CartItemModel> cart = new Dictionary<string, CartItemModel>();
 
-    public AddToCartModel addToCartModel = new AddToCartModel();
     string cartKey = "cartItems";
 
     protected override async Task OnInitializedAsync()
@@ -77,7 +77,7 @@ else
 
         Dictionary<string, CartItemModel> fromSession = await sessionStorage.GetItem<Dictionary<string, CartItemModel>>(cartKey);
 
-        if(fromSession != null)
+        if (fromSession != null)
             cart = fromSession;
 
 
@@ -97,7 +97,7 @@ else
             if (!IsInCart(sku))
             {
                 var product = products.First(p => p.Sku == sku);
-                AddToCart(sku, new CartItemModel() { Product = product, Quantity = quantity });
+                AddToCart(sku, new CartItemModel() { ProductSku = sku, Quantity = quantity });
             }
             else
             {
