@@ -61,19 +61,19 @@ else
             </tr>
         </thead>
         <tbody>
-            @{ 
+            @{
                 foreach (var cartItem in cart)
                 {
                     var product = cartProducts.Single(s => s.Sku == cartItem.Value.ProductSku);
                     double price = product.Price * cartItem.Value.Quantity;
-                <tr>
-                    <td>@product.Title</td>
-                    <td>@cartItem.Value.Quantity</td>
-                    <td>$@price </td>
-                    <td><button @onclick="@(e => RemoveFromCart(cartItem.Key))">Remove</button></td>
-                </tr>
-            }
+                    <tr>
+                        <td>@product.Title</td>
+                        <td>@cartItem.Value.Quantity</td>
+                        <td>$@price </td>
+                        <td><button @onclick="@(e => RemoveFromCart(cartItem.Key))">Remove</button></td>
+                    </tr>
                 }
+            }
         </tbody>
     </table>
 }
@@ -90,13 +90,13 @@ else
     protected override async Task OnInitializedAsync()
     {
         Dictionary<string, CartItemModel> fromSession = await sessionStorage.GetItem<Dictionary<string, CartItemModel>>(cartKey);
-        
+
 
         totalPages = await Http.GetJsonAsync<int>($"api/Products/TotalPages");
         if (fromSession != null)
             cart = fromSession;
-        if(cart.Count() != 0)
-        await UpdateCartProducts();
+        if (cart.Count() != 0)
+            await UpdateCartProducts();
 
         products = await Http.GetJsonAsync<ProductModel[]>($"api/Products/PaginatedProducts/{currentPage}");
 
@@ -109,7 +109,7 @@ else
     }
     private async Task GetPreviousPage()
     {
-        if(currentPage > 1)
+        if (currentPage > 1)
             currentPage--;
         products = await Http.GetJsonAsync<ProductModel[]>($"api/Products/PaginatedProducts/{currentPage}");
     }
@@ -153,7 +153,8 @@ else
 
     private async Task UpdateCartProducts()
     {
-        cartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=",cart.Select(s => s.Value.ProductSku).ToList())}");
+        if(cart.Count() > 0)
+        cartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=", cart.Select(s => s.Value.ProductSku).ToList())}");
     }
 
     private void RemoveFromCart(string sku)
@@ -161,6 +162,4 @@ else
         if (cart.ContainsKey(sku))
             cart.Remove(sku);
     }
-
-
 }

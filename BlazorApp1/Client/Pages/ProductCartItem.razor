@@ -13,8 +13,12 @@ else
             height: auto;
             background: #f3f3f3;
             padding: 20px;
-            border: 2px solid #808080
+            border: 2px solid #808080;
         }
+
+            .cart-item input {
+                width: 60px;
+            }
     </style>
 
 
@@ -25,7 +29,7 @@ else
         <div>@Product.Quantity left</div>
         <div>
             <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
-                <InputNumber @bind-Value="@cartItemModel.Quantity"></InputNumber>
+                <InputNumber min="0" @bind-Value="@cartItemModel.Quantity"/>
                 <button type="submit">@buttonText</button>
             </EditForm>
         </div>
@@ -43,4 +47,8 @@ else
     [Parameter]
     public Action OnClick { get; set; }
 
+    public void ValueChanged()
+    {
+
+    }
 }

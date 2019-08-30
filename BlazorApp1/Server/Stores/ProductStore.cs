@@ -32,7 +32,8 @@ namespace BlazorApp1.Server.Stores
                 {
                     Sku = i.ToString(),
                     Title = "Item " + i,
-                    Price = double.Parse($"{rand.Next(0, 1001)}.{rand.Next(0, 100)}")
+                    Price = double.Parse($"{rand.Next(0, 1001)}.{rand.Next(0, 100)}"),
+                    Quantity = rand.Next(0,3000)
                 });
             }
 
