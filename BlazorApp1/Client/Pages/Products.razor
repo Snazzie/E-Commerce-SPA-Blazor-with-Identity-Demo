@@ -135,7 +135,7 @@ else
         }
         else
         {
-            RemoveFromCart(sku);
+            await RemoveFromCart(sku);
         }
 
         await sessionStorage.SetItem<Dictionary<string, CartItemModel>>(cartKey, cart);
@@ -157,9 +157,10 @@ else
         cartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=", cart.Select(s => s.Value.ProductSku).ToList())}");
     }
 
-    private void RemoveFromCart(string sku)
+    private Task RemoveFromCart(string sku)
     {
         if (cart.ContainsKey(sku))
             cart.Remove(sku);
+        return Task.CompletedTask;
     }
 }

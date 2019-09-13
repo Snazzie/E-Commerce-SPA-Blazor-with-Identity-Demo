@@ -21,11 +21,11 @@
 </div>
 
 @code {
-    bool collapseNavMenu = true;
+    public bool collapseNavMenu = true;
 
-    string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    public string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    void ToggleNavMenu()
+    public void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
