@@ -10,7 +10,9 @@ namespace BlazorApp1.Client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddStorage();
-            services.AddSingleton(new EventsService());
+            var eventService = new EventsService();
+            services.AddSingleton(eventService);
+            services.AddSingleton(new CartService(eventService));
         }
 
         public void Configure(IComponentsApplicationBuilder app)

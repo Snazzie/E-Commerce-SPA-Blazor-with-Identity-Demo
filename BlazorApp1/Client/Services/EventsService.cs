@@ -11,5 +11,6 @@ namespace BlazorApp1.Client.Services
         public event Action CartUpdated;
 
         public void NotifyCartUpdated() => CartUpdated?.Invoke();
+
     }
 }

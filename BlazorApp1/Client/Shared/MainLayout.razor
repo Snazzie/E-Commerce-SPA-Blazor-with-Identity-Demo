@@ -3,7 +3,8 @@
 @using Services
 @inject HttpClient Http
 @inject Blazor.Extensions.Storage.SessionStorage SessionStorage
-@inject EventsService AppState
+@inject EventsService EventsService
+@inject CartService CartService
 @implements IDisposable
 <div class="sidebar">
     <NavMenu />
@@ -11,8 +12,7 @@
 
 <div class="main">
     <div class="top-row px-4">
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        <div>Items in cart: @ItemsInCart</div>
+        <div>Items in cart: @CartService.Cart.Count()</div>
     </div>
 
     <div class="content px-4">
@@ -21,26 +21,18 @@
 </div>
 
 @code {
-    int ItemsInCart = 0;
-
     protected override async Task OnInitializedAsync()
     {
-        AppState.CartUpdated += OnCartUpdated;
-
-        Dictionary<string, CartItemModel> fromSession = await SessionStorage.GetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey);
-        ItemsInCart = fromSession.Count();
+        EventsService.CartUpdated += OnCartUpdated;
     }
 
-    public async void OnCartUpdated()
+    public void OnCartUpdated()
     {
-        ItemsInCart = (await SessionStorage.GetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey)).Count();
-
         StateHasChanged();
-
     }
 
     public void Dispose()
     {
-        AppState.CartUpdated -= OnCartUpdated;
+        EventsService.CartUpdated -= OnCartUpdated;
     }
 }
