@@ -1,7 +1,9 @@
-@page "/products"
 @using Blazor.Shared
 @inject HttpClient Http
-@inject Blazor.Extensions.Storage.SessionStorage sessionStorage
+@inject Blazor.Extensions.Storage.SessionStorage SessionStorage
+@inject EventsService AppState
+
+@using Services;
 
 <style>
     .products-container {
@@ -85,11 +87,10 @@ else
     int currentPage = 1;
     int defaultPageSize = 20;
     int totalPages;
-    string cartKey = "cartItems";
 
     protected override async Task OnInitializedAsync()
     {
-        Dictionary<string, CartItemModel> fromSession = await sessionStorage.GetItem<Dictionary<string, CartItemModel>>(cartKey);
+        Dictionary<string, CartItemModel> fromSession = await SessionStorage.GetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey);
 
 
         totalPages = await Http.GetJsonAsync<int>($"api/Products/TotalPages");
@@ -138,9 +139,9 @@ else
             await RemoveFromCart(sku);
         }
 
-        await sessionStorage.SetItem<Dictionary<string, CartItemModel>>(cartKey, cart);
+        await SessionStorage.SetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey, cart);
         await UpdateCartProducts();
-
+        AppState.NotifyCartUpdated();
         base.StateHasChanged();
     }
 
@@ -153,8 +154,11 @@ else
 
     private async Task UpdateCartProducts()
     {
-        if(cart.Count() > 0)
-        cartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=", cart.Select(s => s.Value.ProductSku).ToList())}");
+        if (cart.Count() > 0)
+        {
+            cartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=", cart.Select(s => s.Value.ProductSku).ToList())}");
+            
+        }
     }
 
     private Task RemoveFromCart(string sku)
