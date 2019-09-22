@@ -10,19 +10,41 @@ namespace BlazorApp1.Client.Services
     {
 
         public List<ProductModel> CartProducts { get; set; } = new List<ProductModel>();
-
         public Dictionary<string, CartItemModel> Cart { get; set; } = new Dictionary<string, CartItemModel>();
-        private EventsService _EventsService { get; }
 
-        public CartService(EventsService eventsService)
+        private readonly IEventService EventsService;
+
+        public CartService(IEventService eventsService)
         {
-            _EventsService = eventsService;
+            EventsService = eventsService;
+
+
+        }
+
+        public void UpdateCart(string sku, int quantity)
+        {
+            if (quantity > 0)
+            {
+                if (!CartContains(sku))
+                {
+                    AddToCart(sku, new CartItemModel() { ProductSku = sku, Quantity = quantity });
+                }
+                else
+                {
+                    Cart[sku].Quantity = quantity;
+                }
+            }
+            else
+            {
+                if (CartContains(sku))
+                    RemoveFromCart(sku);
+            }
         }
 
         public void AddToCart(string sku, CartItemModel cartItemModel)
         {
             Cart.Add(sku, cartItemModel);
-            _EventsService.NotifyCartUpdated();
+            EventsService.NotifyCartUpdated();
         }
 
         public void RemoveFromCart(string sku)
@@ -30,13 +52,15 @@ namespace BlazorApp1.Client.Services
             if (Cart.ContainsKey(sku))
             {
                 Cart.Remove(sku);
-                _EventsService.NotifyCartUpdated();
+                EventsService.NotifyCartUpdated();
             }
         }
+
         public CartItemModel[] GetCartItems()
         {
             return Cart.Values.ToArray();
         }
+
         public bool CartContains(string sku)
         {
             return Cart.ContainsKey(sku);

@@ -2,9 +2,7 @@
 @inject HttpClient Http
 @using Services
 @inject Blazor.Extensions.Storage.SessionStorage SessionStorage
-@inject EventsService EventsService
-@inject CartService CartService;
-
+@inject CartService CartService
 <style>
     .products-container {
         display: grid;
@@ -98,7 +96,6 @@ else
         await UpdateCartProducts();
 
         products = await Http.GetJsonAsync<ProductModel[]>($"api/Products/PaginatedProducts/{currentPage}");
-
     }
 
     private async Task GetNextPage()
@@ -120,22 +117,7 @@ else
 
     public async void UpdateCart(string sku, int quantity)
     {
-        if (quantity > 0)
-        {
-            if (!IsInCart(sku))
-            {
-                var product = products.First(p => p.Sku == sku);
-                CartService.AddToCart(sku, new CartItemModel() { ProductSku = sku, Quantity = quantity });
-            }
-            else
-            {
-                CartService.Cart[sku].Quantity = quantity;
-            }
-        }
-        else
-        {
-            CartService.RemoveFromCart(sku);
-        }
+        CartService.UpdateCart(sku, quantity);
 
         await SessionStorage.SetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey, CartService.Cart);
         await UpdateCartProducts();

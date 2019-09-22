@@ -1,7 +1,10 @@
 using Blazor.Extensions.Storage;
 using BlazorApp1.Client.Services;
 using Microsoft.AspNetCore.Components.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Net.Http;
 
 namespace BlazorApp1.Client
 {
@@ -11,8 +14,12 @@ namespace BlazorApp1.Client
         {
             services.AddStorage();
             var eventService = new EventsService();
-            services.AddSingleton(eventService);
-            services.AddSingleton(new CartService(eventService));
+            services.AddSingleton<EventsService>(eventService);
+            services.AddSingleton<IEventService, EventsService>();
+            services.AddSingleton<CartService>(new CartService(eventService));
+            services.AddTransient<ApiUsageService>();
+
+
         }
 
         public void Configure(IComponentsApplicationBuilder app)

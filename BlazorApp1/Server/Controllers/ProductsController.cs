@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Threading.Tasks;
 using Blazor.Shared;
 using BlazorApp1.Server.Stores;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blazor.Server.Controllers
 {
     [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : ControllerBase, IProductsApi
     {
         private readonly ProductStore m_ProductStore;
 

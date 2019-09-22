@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 
 namespace BlazorApp1.Client.Services
 {
-    public class EventsService
+    public class EventsService : IEventService
     {
 
         public event Action CartUpdated;
 
         public void NotifyCartUpdated() => CartUpdated?.Invoke();
 
+    }
+
+    public interface IEventService
+    {
+        void NotifyCartUpdated();
     }
 }
