@@ -2,6 +2,7 @@ using Blazor.Server.Controllers;
 using Blazor.Server.Stores;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace ServerTests
 {
@@ -18,11 +19,12 @@ namespace ServerTests
         }
 
         [Test]
-        public void ProductsReturnAllProducts()
+        public async Task ProductsReturnAllProductsAsync()
         {
-            var products = productsController.Products();
+            var products = await productsController.Products();
 
             products.Should().BeEquivalentTo(productStore.GetAll());
         }
+
     }
 }
