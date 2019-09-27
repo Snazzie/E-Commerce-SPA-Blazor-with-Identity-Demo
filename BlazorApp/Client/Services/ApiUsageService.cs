@@ -16,7 +16,6 @@ namespace Blazor.Client.Services
     {
         HttpClient HttpClient;
 
-        
         public ApiUsageService(HttpClient httpClient)
         {
             HttpClient = httpClient;
@@ -35,7 +34,7 @@ namespace Blazor.Client.Services
 
         }
 
-        public IEnumerable<ProductModel> Products()
+        public Task<ProductModel[]> Products()
         {
             throw new NotImplementedException();
         }

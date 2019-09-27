@@ -6,7 +6,7 @@ namespace Blazor.Server.Controllers
 {
     public interface IProductsApi
     {
-        IEnumerable<ProductModel> Products();
+        Task<ProductModel[]> Products();
 
         Task<ProductModel[]> GetProducts(string[] skus);
 

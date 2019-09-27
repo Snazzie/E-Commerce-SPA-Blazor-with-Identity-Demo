@@ -18,9 +18,9 @@ namespace Blazor.Server.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<ProductModel> Products()
+        public Task<ProductModel[]> Products()
         {
-            return m_ProductStore.GetAll();
+            return Task.FromResult(m_ProductStore.GetAll().ToArray());
         }
 
         [HttpGet("[action]")]
