@@ -1,0 +1,144 @@
+@using Blazor.Shared
+@inject HttpClient Http
+@using Services
+@inject Blazor.Extensions.Storage.SessionStorage SessionStorage
+@inject CartService CartService
+@inject ApiUsageService ApiUsageService
+<style>
+    .products-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,220px);
+        grid-gap: 20px;
+        justify-content: space-evenly;
+    }
+</style>
+
+<h3>Products</h3>
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="products-container">
+        @foreach (var product in products)
+        {
+            var isInCart = IsInCart(product.Sku);
+            CartItemModel cartItem;
+            if (isInCart)
+            {
+                cartItem = CartService.Cart[product.Sku];
+            }
+            else
+            {
+                cartItem = new CartItemModel() { ProductSku = product.Sku };
+            }
+
+            <ProductCartItem Product="product" cartItemModel="@cartItem" IsInCart="isInCart" OnClick="@(() => UpdateCart(product.Sku, cartItem.Quantity))" />
+        }
+    </div>
+    <div>
+        <div>Page @currentPage / @totalPages</div>
+
+        @if (currentPage > 0)
+        {
+            <button @onclick="@(() => GetPreviousPage())">Previous</button>
+        }
+        @if (currentPage < totalPages)
+        {
+            <button @onclick="@(() => GetNextPage())">Next</button>
+        }
+
+    </div>
+
+    <h3>Cart</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Quanitity</th>
+                <th>Price</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                foreach (var cartItem in CartService.Cart)
+                {
+                    var product = CartService.CartProducts.Single(s => s.Sku == cartItem.Value.ProductSku);
+                    double price = product.Price * cartItem.Value.Quantity;
+                    <tr>
+                        <td>@product.Title</td>
+                        <td>@cartItem.Value.Quantity</td>
+                        <td>$@price </td>
+                        <td><button @onclick="@(e => UpdateCart(product.Sku, 0))">Remove</button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+@code {
+
+    ProductModel[] products;
+    int currentPage = 1;
+    int defaultPageSize = 20;
+    int totalPages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Dictionary<string, CartItemModel> fromSession = await SessionStorage.GetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey);
+
+
+        totalPages = await Http.GetJsonAsync<int>($"api/Products/TotalPages");
+        if (fromSession != null)
+            CartService.Cart = fromSession;
+
+        await UpdateCartProducts();
+
+        var result = await ApiUsageService.PaginatedProductsAsync(currentPage);
+        products = result.ToArray();
+    }
+
+    private async Task GetNextPage()
+    {
+        currentPage++;
+        products = await Http.GetJsonAsync<ProductModel[]>($"api/Products/PaginatedProducts/{currentPage}");
+    }
+    private async Task GetPreviousPage()
+    {
+        if (currentPage > 1)
+            currentPage--;
+        products = await Http.GetJsonAsync<ProductModel[]>($"api/Products/PaginatedProducts/{currentPage}");
+    }
+
+    private bool IsInCart(string sku)
+    {
+        return CartService.Cart.ContainsKey(sku);
+    }
+
+    public async void UpdateCart(string sku, int quantity)
+    {
+        CartService.UpdateCart(sku, quantity);
+
+        await SessionStorage.SetItem<Dictionary<string, CartItemModel>>(StaticValues.StorageCartKey, CartService.Cart);
+        await UpdateCartProducts();
+
+        base.StateHasChanged();
+    }
+
+
+    private async Task UpdateCartProducts()
+    {
+        if (CartService.GetCartItems().Count() > 0)
+        {
+            CartService.CartProducts = await Http.GetJsonAsync<List<ProductModel>>($"api/Products/GetProducts?skus={String.Join("&skus=", CartService.Cart.Select(s => s.Value.ProductSku).ToList())}");
+
+        }
+        else
+        {
+            CartService.CartProducts.Clear();
+        }
+    }
+
+}

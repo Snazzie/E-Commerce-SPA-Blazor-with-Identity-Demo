@@ -1,4 +1,4 @@
-using BlazorApp1.Client.Services;
+using Blazor.Client.Services;
 using NSubstitute;
 using NUnit.Framework;
 

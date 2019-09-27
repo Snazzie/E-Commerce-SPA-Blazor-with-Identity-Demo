@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorApp1\Server\BlazorApp1.Server.csproj" />
+    <ProjectReference Include="..\BlazorApp\Server\Blazor.Server.csproj" />
   </ItemGroup>
 
 </Project>

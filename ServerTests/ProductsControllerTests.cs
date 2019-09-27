@@ -1,5 +1,5 @@
 using Blazor.Server.Controllers;
-using BlazorApp1.Server.Stores;
+using Blazor.Server.Stores;
 using FluentAssertions;
 using NUnit.Framework;
 
