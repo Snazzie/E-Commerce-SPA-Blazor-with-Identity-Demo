@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace Blazor.Client.Services
 {
-    public class CartService
+    public interface ICartService
+    {
+        Dictionary<string, CartItemModel> Cart { get; set; }
+        List<ProductModel> CartProducts { get; set; }
+
+        void AddToCart(string sku, CartItemModel cartItemModel);
+        bool CartContains(string sku);
+        CartItemModel[] GetCartItems();
+        void RemoveFromCart(string sku);
+        void UpdateCart(string sku, int quantity);
+    }
+
+    public class CartService : ICartService
     {
 
         public List<ProductModel> CartProducts { get; set; } = new List<ProductModel>();

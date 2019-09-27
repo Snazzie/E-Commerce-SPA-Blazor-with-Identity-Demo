@@ -17,5 +17,6 @@ namespace Blazor.Client.Services
     public interface IEventService
     {
         void NotifyCartUpdated();
+        event Action CartUpdated;
     }
 }

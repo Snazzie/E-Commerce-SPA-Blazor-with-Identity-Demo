@@ -13,13 +13,10 @@ namespace Blazor.Client
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddStorage();
-            var eventService = new EventsService();
-            services.AddSingleton<EventsService>(eventService);
-            services.AddSingleton<IEventService, EventsService>();
-            services.AddSingleton<CartService>(new CartService(eventService));
-            services.AddTransient<ApiUsageService>();
-
-
+            services.AddSingleton<IEventService>(c => new EventsService());
+            services.AddSingleton<ICartService, CartService>();
+            services.AddSingleton<IApiUsageService, ApiUsageService>();
+            services.AddSingleton<ICheckoutService, CheckoutService>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

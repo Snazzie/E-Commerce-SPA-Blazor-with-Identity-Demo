@@ -2,8 +2,8 @@
 @inject HttpClient Http
 @using Services
 @inject Blazor.Extensions.Storage.SessionStorage SessionStorage
-@inject CartService CartService
-@inject ApiUsageService ApiUsageService
+@inject ICartService CartService
+@inject IApiUsageService ApiUsageService
 <style>
     .products-container {
         display: grid;

@@ -3,8 +3,8 @@
 @using Services
 @inject HttpClient Http
 @inject Blazor.Extensions.Storage.SessionStorage SessionStorage
-@inject EventsService EventsService
-@inject CartService CartService
+@inject IEventService EventsService
+@inject ICartService CartService
 @implements IDisposable
 <div class="sidebar">
     <NavMenu />
