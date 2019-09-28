@@ -10,8 +10,8 @@ namespace Blazor.Server.Controllers
 
         Task<ProductModel[]> GetProducts(string[] skus);
 
-        Task<ProductModel[]> PaginatedProductsAsync(int pageIndex);
+        Task<ProductModel[]> PaginatedProducts(int pageIndex);
 
-        int TotalPages();
+        Task<int> TotalPages();
     }
 }

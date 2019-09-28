@@ -1,6 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@using Blazor.Shared
-@using Services
 @inject HttpClient Http
 @inject Blazor.Extensions.Storage.SessionStorage SessionStorage
 @inject IEventService EventsService
@@ -24,6 +22,7 @@
     protected override async Task OnInitializedAsync()
     {
         EventsService.CartUpdated += OnCartUpdated;
+        await CartService.Initialize();
     }
 
     public void OnCartUpdated()

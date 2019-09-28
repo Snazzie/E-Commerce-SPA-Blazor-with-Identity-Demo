@@ -3,6 +3,7 @@ using Blazor.Shared;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,12 +22,13 @@ namespace Blazor.Client.Services
             HttpClient = httpClient;
         }
 
-        public Task<ProductModel[]> GetProducts(string[] skus)
+        public async Task<ProductModel[]> GetProducts(string[] skus)
         {
-            throw new NotImplementedException();
+            var json = await HttpClient.GetStringAsync($"api/Products/GetProducts?skus={String.Join("&skus=", skus)}");
+            return JsonConvert.DeserializeObject<ProductModel[]>(json);
         }
 
-        public async Task<ProductModel[]> PaginatedProductsAsync(int pageIndex)
+        public async Task<ProductModel[]> PaginatedProducts(int pageIndex)
         {
 
             var json = await HttpClient.GetStringAsync($"api/Products/PaginatedProducts/{pageIndex}");
@@ -34,14 +36,16 @@ namespace Blazor.Client.Services
 
         }
 
-        public Task<ProductModel[]> Products()
+        public async Task<ProductModel[]> Products()
         {
-            throw new NotImplementedException();
+            var json = await HttpClient.GetStringAsync($"api/Products/Products");
+            return JsonConvert.DeserializeObject<ProductModel[]>(json);
         }
 
-        public int TotalPages()
+        public async Task<int> TotalPages()
         {
-            throw new NotImplementedException();
+            var json = await HttpClient.GetStringAsync($"api/Products/TotalPages");
+            return int.Parse(json);
         }
     }
 }

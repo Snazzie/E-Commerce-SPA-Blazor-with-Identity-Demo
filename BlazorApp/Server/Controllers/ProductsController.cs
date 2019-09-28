@@ -27,29 +27,22 @@ namespace Blazor.Server.Controllers
         public Task<ProductModel[]> GetProducts([FromQuery]string[] skus)
         {
             var products = m_ProductStore.GetAll();
-            var toReturn = new List<ProductModel>();
-            var skuList = skus.ToList();
-            skuList.ForEach(s =>
-            {
-                var product = products.Single(p => p.Sku == s);
-                toReturn.Add(product);
-            }
-            );
-            return Task.FromResult(toReturn.ToArray());
+            var toReturn = skus.Select(s => products.SingleOrDefault(p => p.Sku == s)).ToArray();
+            return Task.FromResult(toReturn);
         }
 
 
         [HttpGet("[action]/{pageIndex}")]
-        public Task<ProductModel[]> PaginatedProductsAsync(int pageIndex)
+        public Task<ProductModel[]> PaginatedProducts(int pageIndex)
         {
             pageIndex--;
             return Task.FromResult(m_ProductStore.GetAll(pageIndex, 20).ToArray());
         }
 
         [HttpGet("[action]")]
-        public int TotalPages()
+        public Task<int> TotalPages()
         {
-            return m_ProductStore.TotalPages(20);
+            return Task.FromResult(m_ProductStore.TotalPages(20));
         }
     }
 }

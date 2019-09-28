@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Blazor.Client
 {
@@ -17,6 +18,7 @@ namespace Blazor.Client
             services.AddSingleton<ICartService, CartService>();
             services.AddSingleton<IApiUsageService, ApiUsageService>();
             services.AddSingleton<ICheckoutService, CheckoutService>();
+            services.AddSingleton<ISessionStorageService, SessionStorageService>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

@@ -1,4 +1,36 @@
-﻿<h3>EditCart</h3>
+﻿@inject ICartService CartService
+
+@page "/EditCart"
+
+<h3>EditCart</h3>
+
+
+<h3>Cart</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Quanitity</th>
+            <th>Price</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var cartItem in CartService.Cart)
+            {
+                var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItem.Value.ProductSku);
+                double price = product.Price * cartItem.Value.Quantity;
+                <tr>
+                    <td>@product.Title</td>
+                    <td>@cartItem.Value.Quantity</td>
+                    <td>$@price </td>
+                    <td><button @onclick="@(async () => await CartService.UpdateCart(product.Sku, 0))">Remove</button></td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
 
 @code {
 
