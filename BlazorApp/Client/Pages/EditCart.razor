@@ -1,7 +1,6 @@
-﻿@inject ICartService CartService
-
-@page "/EditCart"
-
+﻿@page "/EditCart"
+@inject ICartService CartService
+@inject IEventService EventService
 <h3>EditCart</h3>
 
 
@@ -17,21 +16,65 @@
     </thead>
     <tbody>
         @{
-            foreach (var cartItem in CartService.Cart)
+
+
+            foreach (var cartItemPair in CartService.Cart)
             {
-                var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItem.Value.ProductSku);
-                double price = product.Price * cartItem.Value.Quantity;
+
+                var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItemPair.Value.ProductSku);
+                var newPrice = product.Price * cartItemPair.Value.Quantity;
+                var staticPrice = product.Price * staticCart.Single(i => i.ProductSku == cartItemPair.Value.ProductSku).Quantity;
+
+
                 <tr>
                     <td>@product.Title</td>
-                    <td>@cartItem.Value.Quantity</td>
-                    <td>$@price </td>
+                    <td>
+                        <EditForm Model="cartItemPair" OnSubmit="(async () => await CartService.UpdateCart(product.Sku, cartItemPair.Value.Quantity))">
+                            <InputNumber min="0" @bind-Value="@cartItemPair.Value.Quantity" />
+                            <button type="submit">Update</button>
+                        </EditForm>
+                    </td>
+
+                    @{
+                        if (newPrice != staticPrice)
+                        {
+                            <td><s>$@staticPrice</s> => $@newPrice</td>
+                        }
+                        else
+                        {
+                            <td>$@staticPrice</td>
+                        }
+                    }
+
                     <td><button @onclick="@(async () => await CartService.UpdateCart(product.Sku, 0))">Remove</button></td>
                 </tr>
             }
         }
     </tbody>
 </table>
+@code{
 
-@code {
+    private List<CartItemModel> staticCart;
 
+    protected override async Task OnInitializedAsync()
+    {
+        staticCart = CartService.Cart.Values.ToList().Select(i => new CartItemModel()
+        {
+            ProductSku = i.ProductSku,
+            Quantity = i.Quantity
+        }).ToList();
+
+        EventService.CartUpdated += OnCartUpdated;
+    }
+
+
+    private void OnCartUpdated()
+    {
+        staticCart = CartService.Cart.Values.ToList().Select(i => new CartItemModel()
+        {
+            ProductSku = i.ProductSku,
+            Quantity = i.Quantity
+        }).ToList();
+        base.StateHasChanged();
+    }
 }

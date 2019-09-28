@@ -62,14 +62,16 @@ namespace Blazor.Client.Services
                 if (CartContains(sku))
                     RemoveFromCart(sku);
             }
+
+
             await SessionStorageService.UpdateSessionStorageCart(Cart);
             await UpdateCartProductsCache();
+            EventsService.NotifyCartUpdated();
         }
 
         private void AddToCart(string sku, CartItemModel cartItemModel)
         {
             Cart.Add(sku, cartItemModel);
-            EventsService.NotifyCartUpdated();
         }
 
         private void RemoveFromCart(string sku)
@@ -77,7 +79,6 @@ namespace Blazor.Client.Services
             if (Cart.ContainsKey(sku))
             {
                 Cart.Remove(sku);
-                EventsService.NotifyCartUpdated();
             }
         }
 
