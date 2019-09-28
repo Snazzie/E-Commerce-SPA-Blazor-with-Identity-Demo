@@ -40,7 +40,7 @@ else
     <div>
         <div>Page @currentPage / @totalPages</div>
 
-        @if (currentPage > 0)
+        @if (currentPage > 1)
         {
             <button @onclick="@(() => GetPreviousPage())">Previous</button>
         }

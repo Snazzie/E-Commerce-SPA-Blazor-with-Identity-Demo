@@ -19,6 +19,7 @@ namespace Blazor.Server.Controllers
 
         [HttpGet("[action]")]
         public Task<ProductModel[]> Products()
+
         {
             return Task.FromResult(m_ProductStore.GetAll().ToArray());
         }
@@ -26,11 +27,8 @@ namespace Blazor.Server.Controllers
         [HttpGet("[action]")]
         public Task<ProductModel[]> GetProducts([FromQuery]string[] skus)
         {
-            var products = m_ProductStore.GetAll();
-            var toReturn = skus.Select(s => products.SingleOrDefault(p => p.Sku == s)).ToArray();
-            return Task.FromResult(toReturn);
+            return Task.FromResult(m_ProductStore.Get(skus).ToArray());
         }
-
 
         [HttpGet("[action]/{pageIndex}")]
         public Task<ProductModel[]> PaginatedProducts(int pageIndex)

@@ -1,6 +1,7 @@
 ﻿using Blazor.Shared;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Blazor.Server.Stores
 {
@@ -14,11 +15,16 @@ namespace Blazor.Server.Stores
         {
             return products;
         }
-
+ 
         public IEnumerable<ProductModel> GetAll(int pageIndex, int pageSize)
         {
 
             return products.GetRange(pageIndex * pageSize, pageSize);
+        }
+
+        public IEnumerable<ProductModel> Get(IEnumerable<string> skus)
+        {
+            return skus.Select(sku => products.SingleOrDefault(p => p.Sku == sku)).ToArray();
         }
 
         public static List<ProductModel> GenerateProducts()
