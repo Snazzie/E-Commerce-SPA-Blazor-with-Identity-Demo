@@ -1,64 +1,89 @@
 ﻿@page "/EditCart"
 @inject ICartService CartService
 @inject IEventService EventService
-<h3>EditCart</h3>
 
-
+@inject NavigationManager NavigationManager
 <h3>Cart</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Quanitity</th>
-            <th>Price</th>
-            <th>Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
 
-
-            foreach (var cartItemPair in CartService.Cart)
-            {
-
-                var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItemPair.Value.ProductSku);
-                var newPrice = product.Price * cartItemPair.Value.Quantity;
-                var staticPrice = product.Price * staticCart.Single(i => i.ProductSku == cartItemPair.Value.ProductSku).Quantity;
-
-
-                <tr>
-                    <td>@product.Title</td>
-                    <td>
-                        <EditForm Model="cartItemPair" OnSubmit="(async () => await CartService.UpdateCart(product.Sku, cartItemPair.Value.Quantity))">
-                            <InputNumber min="0" @bind-Value="@cartItemPair.Value.Quantity" />
-                            <button type="submit">Update</button>
-                        </EditForm>
-                    </td>
-
-                    @{
-                        if (newPrice != staticPrice)
-                        {
-                            <td><s>$@staticPrice</s> => $@newPrice</td>
-                        }
-                        else
-                        {
-                            <td>$@staticPrice</td>
-                        }
-                    }
-
-                    <td><button @onclick="@(async () => await CartService.UpdateCart(product.Sku, 0))">Remove</button></td>
-                </tr>
-            }
+@if (CartService.Cart.Count == 0)
+{
+    <h5>There are no items in your cart.</h5>
+}
+else
+{
+    <style>
+        .cartContainer {
+            padding: 0px 40px 0px 40px;
         }
-    </tbody>
-</table>
+
+        hr {
+            border-top: 5px solid rgba(0,0,0,.1);
+        }
+    </style>
+
+    <div class="cartContainer">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Quanitity</th>
+                    <th>Price</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var cartItemPair in CartService.Cart)
+                    {
+                        var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItemPair.Value.ProductSku);
+                        var newPrice = product.Price * cartItemPair.Value.Quantity;
+                        var staticPrice = product.Price * staticCart.Single(i => i.ProductSku == cartItemPair.Value.ProductSku).Quantity;
+
+                        <tr>
+                            <td>@product.Title</td>
+                            <td>
+                                <EditForm Model="cartItemPair" OnSubmit="(async () => await CartService.UpdateCart(product.Sku, cartItemPair.Value.Quantity))">
+                                    <InputNumber min="0" @bind-Value="@cartItemPair.Value.Quantity" />
+                                    <button type="submit">Update</button>
+                                </EditForm>
+                            </td>
+
+                            @{
+                                if (newPrice != staticPrice)
+                                {
+                                    <td><s>$@staticPrice</s> => $@newPrice</td>
+                                }
+                                else
+                                {
+                                    <td>$@staticPrice</td>
+                                }
+                            }
+
+                            <td><button @onclick="@(async () => await CartService.UpdateCart(product.Sku, 0))">Remove</button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <hr />
+        <div style="float:right">
+            @{
+                <b>Subtotal (@CartService.Cart.Count() items): $@CartService.CalculateCost()</b>
+                <br />
+                <button @onclick="@(() => NavigationManager.NavigateTo("checkout"))">Checkout</button>
+            }
+
+        </div>
+    </div>
+}
+
 @code{
 
     private List<CartItemModel> staticCart;
 
     protected override async Task OnInitializedAsync()
     {
-        staticCart = CartService.Cart.Values.ToList().Select(i => new CartItemModel()
+        staticCart = CartService.Cart.Values.Select(i => new CartItemModel()
         {
             ProductSku = i.ProductSku,
             Quantity = i.Quantity
@@ -67,14 +92,12 @@
         EventService.CartUpdated += OnCartUpdated;
     }
 
-
     private void OnCartUpdated()
     {
-        staticCart = CartService.Cart.Values.ToList().Select(i => new CartItemModel()
+        staticCart = CartService.Cart.Values.Select(i => new CartItemModel()
         {
             ProductSku = i.ProductSku,
             Quantity = i.Quantity
         }).ToList();
-        base.StateHasChanged();
     }
 }

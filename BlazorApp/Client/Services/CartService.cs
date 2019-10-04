@@ -1,4 +1,5 @@
-﻿using Blazor.Client.Shared;
+﻿using Blazor.Client.Pages;
+using Blazor.Client.Shared;
 using Blazor.Shared;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace Blazor.Client.Services
         Task UpdateCart(string sku, int quantity);
         Task Initialize();
         Task UpdateCartProductsCache();
+        double CalculateCost();
     }
 
     public class CartService : ICartService
@@ -103,6 +105,11 @@ namespace Blazor.Client.Services
             {
                 CartProducts.Clear();
             }
+        }
+
+        public double CalculateCost()
+        {
+            return CartProducts.Select(p => Cart[p.Sku].Quantity * p.Price).Sum();
         }
 
     }

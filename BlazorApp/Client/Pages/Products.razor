@@ -62,7 +62,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        EventService.CartUpdated += ReRender;
+        EventService.CartUpdated += StateHasChanged;
+;
 
         totalPages = await ApiUsageService.TotalPages();
         await CartService.Initialize();
@@ -82,10 +83,4 @@ else
             currentPage--;
         products = await ApiUsageService.PaginatedProducts(currentPage);
     }
-
-    public void ReRender()
-    {
-        StateHasChanged();
-    }
-
 }

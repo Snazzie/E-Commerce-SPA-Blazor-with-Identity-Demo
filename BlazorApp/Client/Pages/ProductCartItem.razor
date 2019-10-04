@@ -29,7 +29,7 @@ else
         <div>@Product.Quantity left</div>
         <div>
             <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
-                <InputNumber min="0" @bind-Value="@cartItemModel.Quantity"/>
+                <InputNumber min="0" @bind-Value="@cartItemModel.Quantity" />
                 <button type="submit">@buttonText</button>
             </EditForm>
         </div>
