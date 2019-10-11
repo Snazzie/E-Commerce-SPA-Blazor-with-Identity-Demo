@@ -21,17 +21,12 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        EventsService.CartUpdated += OnCartUpdated;
+        EventsService.CartUpdated += StateHasChanged;
         await CartService.Initialize();
-    }
-
-    public void OnCartUpdated()
-    {
-        StateHasChanged();
     }
 
     public void Dispose()
     {
-        EventsService.CartUpdated -= OnCartUpdated;
+        EventsService.CartUpdated -= StateHasChanged;
     }
 }

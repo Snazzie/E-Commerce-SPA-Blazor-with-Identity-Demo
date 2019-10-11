@@ -5,10 +5,37 @@
 
 
     <div>
+        <EditForm Model="CheckoutService.OrderForm" OnSubmit="(() => CheckoutService.Checkout())">
 
+            <h4>Shipping Details</h4>
+            <div>FullName</div>
+            <input @bind="CheckoutService.OrderForm.ShippingDetails.FullName" />
+
+            <div>FirstLine</div>
+            <input @bind="CheckoutService.OrderForm.ShippingDetails.FirstLine" />
+
+            <div>SecondLine</div>
+            <input @bind="CheckoutService.OrderForm.ShippingDetails.SecondLine" />
+
+            <div>PostCode</div>
+            <input @bind="CheckoutService.OrderForm.ShippingDetails.PostCode" />
+
+            <div>Country</div>
+            <input @bind="CheckoutService.OrderForm.ShippingDetails.Country" />
+
+            <button type="submit">Place Order</button>
+        </EditForm>
     </div>
 
+<div></div>
+
 @code{
+
+
+    protected override async Task OnInitializedAsync()
+    {
+    }
+
 
 
 }

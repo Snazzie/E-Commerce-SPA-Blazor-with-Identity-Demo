@@ -17,7 +17,7 @@ namespace Blazor.Client
             services.AddSingleton<IEventService>(c => new EventsService());
             services.AddSingleton<ICartService, CartService>();
             services.AddSingleton<IApiUsageService, ApiUsageService>();
-            services.AddSingleton<ICheckoutService, CheckoutService>();
+            services.AddScoped<ICheckoutService, CheckoutService>();
             services.AddSingleton<ISessionStorageService, SessionStorageService>();
         }
 

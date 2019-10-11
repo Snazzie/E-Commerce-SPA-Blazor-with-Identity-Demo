@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Blazor.Shared;
 using Blazor.Server.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Blazor.Shared.Controllers;
 
 namespace Blazor.Server.Controllers
 {
@@ -19,7 +19,6 @@ namespace Blazor.Server.Controllers
 
         [HttpGet("[action]")]
         public Task<ProductModel[]> Products()
-
         {
             return Task.FromResult(m_ProductStore.GetAll().ToArray());
         }
