@@ -4,22 +4,22 @@
 @inject IApiUsageService ApiUsageService
 @inject IEventService EventService
 
-<style>
-    .products-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill,220px);
-        grid-gap: 20px;
-        justify-content: space-evenly;
-    }
-</style>
-
-<h3>Products</h3>
 @if (products == null)
 {
-    <p><em>Loading...</em></p>
+    <Spinner />
 }
 else
 {
+    <style>
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,220px);
+            grid-gap: 20px;
+            justify-content: space-evenly;
+        }
+    </style>
+
+    <h3>Products</h3>
     <div class="products-container">
         @foreach (var product in products)
         {

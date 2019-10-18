@@ -10,7 +10,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\styles\Spinner.css" />
+    <None Include="wwwroot\styles\Spinner.min.css" />
+    <None Include="wwwroot\styles\Spinner.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Blazor.Extensions.Storage" Version="1.0.0" />
+    <PackageReference Include="BuildWebCompiler" Version="1.12.394" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.0.0-preview9.19465.2" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview9.19465.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.HttpClient" Version="3.0.0-preview9.19465.2" />
