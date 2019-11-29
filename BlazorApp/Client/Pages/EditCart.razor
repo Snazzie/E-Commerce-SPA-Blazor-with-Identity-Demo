@@ -25,7 +25,7 @@ else
         <table class="table">
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th>Item</th>
                     <th>Quanitity</th>
                     <th>Price</th>
                     <th>Options</th>
@@ -70,7 +70,10 @@ else
             @{
                 <b>Subtotal (@CartService.Cart.Count() items): $@CartService.CalculateCost()</b>
                 <br />
-                <button @onclick="@(() => NavigationManager.NavigateTo("checkout"))">Checkout</button>
+                @if (ShowCheckoutButton)
+                {
+                    <button @onclick="@(() => NavigationManager.NavigateTo("checkout"))">Checkout</button>
+                }
             }
 
         </div>
@@ -78,18 +81,16 @@ else
 }
 
 @code{
+    [Parameter]
+    public bool ShowCheckoutButton { get; set; } = true;
 
     private List<CartItemModel> staticCart;
 
     protected override async Task OnInitializedAsync()
     {
-        staticCart = CartService.Cart.Values.Select(i => new CartItemModel()
-        {
-            ProductSku = i.ProductSku,
-            Quantity = i.Quantity
-        }).ToList();
-
         EventService.CartUpdated += OnCartUpdated;
+
+        OnCartUpdated();
     }
 
     private void OnCartUpdated()

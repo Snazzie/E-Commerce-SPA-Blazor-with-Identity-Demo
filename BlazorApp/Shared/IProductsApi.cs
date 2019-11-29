@@ -1,8 +1,6 @@
-﻿using Blazor.Shared;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Blazor.Server.Controllers
+namespace Blazor.Shared.Controllers
 {
     public interface IProductsApi
     {

@@ -4,22 +4,22 @@
 @inject IApiUsageService ApiUsageService
 @inject IEventService EventService
 
-<style>
-    .products-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill,220px);
-        grid-gap: 20px;
-        justify-content: space-evenly;
-    }
-</style>
-
-<h3>Products</h3>
 @if (products == null)
 {
-    <p><em>Loading...</em></p>
+    <Spinner />
 }
 else
 {
+    <style>
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,220px);
+            grid-gap: 20px;
+            justify-content: space-evenly;
+        }
+    </style>
+
+    <h3>Products</h3>
     <div class="products-container">
         @foreach (var product in products)
         {
@@ -40,14 +40,8 @@ else
     <div>
         <div>Page @currentPage / @totalPages</div>
 
-        @if (currentPage > 1)
-        {
-            <button @onclick="@(() => GetPreviousPage())">Previous</button>
-        }
-        @if (currentPage < totalPages)
-        {
-            <button @onclick="@(() => GetNextPage())">Next</button>
-        }
+        <button @onclick="@(() => GetPreviousPage())" disabled="@(!(currentPage > 1))">Previous</button>
+        <button @onclick="@(() => GetNextPage())" disabled="@(!(currentPage < totalPages))">Next</button>
 
     </div>
 

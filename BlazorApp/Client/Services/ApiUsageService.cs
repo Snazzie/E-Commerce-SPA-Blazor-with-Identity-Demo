@@ -1,5 +1,5 @@
-﻿using Blazor.Server.Controllers;
-using Blazor.Shared;
+﻿using Blazor.Shared;
+using Blazor.Shared.Controllers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Blazor.Client.Services
 {
-    public interface IApiUsageService : IProductsApi
+    public interface IApiUsageService : IProductsApi, ICheckoutApi
     {
     }
 
@@ -30,10 +30,14 @@ namespace Blazor.Client.Services
 
         public async Task<ProductModel[]> PaginatedProducts(int pageIndex)
         {
-
             var json = await HttpClient.GetStringAsync($"api/Products/PaginatedProducts/{pageIndex}");
             return JsonConvert.DeserializeObject<ProductModel[]>(json);
+        }
 
+        public async Task<string> PlaceOrder(OrderFormModel orderForm)
+        {
+            var orderNumber = await HttpClient.GetStringAsync($"api/Checkout/{orderForm}");
+            return orderNumber;
         }
 
         public async Task<ProductModel[]> Products()
