@@ -1,41 +1,44 @@
 ﻿@page "/checkout"
 @inject ICheckoutService CheckoutService
+@inject IEventService EventService
+
 <h3>CheckOut</h3>
 
 
 
-    <div>
-        <EditForm Model="CheckoutService.OrderForm" OnSubmit="(() => CheckoutService.Checkout())">
+<div>
+    <EditForm Model="CheckoutService.OrderForm" OnSubmit="(() => CheckoutService.Checkout())">
 
-            <h4>Shipping Details</h4>
-            <div>FullName</div>
-            <input @bind="CheckoutService.OrderForm.ShippingDetails.FullName" />
+        <h4>Shipping Details</h4>
+        <div>FullName</div>
+        <input @bind="CheckoutService.OrderForm.ShippingDetails.FullName" />
 
-            <div>FirstLine</div>
-            <input @bind="CheckoutService.OrderForm.ShippingDetails.FirstLine" />
+        <div>FirstLine</div>
+        <input @bind="CheckoutService.OrderForm.ShippingDetails.FirstLine" />
 
-            <div>SecondLine</div>
-            <input @bind="CheckoutService.OrderForm.ShippingDetails.SecondLine" />
+        <div>SecondLine</div>
+        <input @bind="CheckoutService.OrderForm.ShippingDetails.SecondLine" />
 
-            <div>PostCode</div>
-            <input @bind="CheckoutService.OrderForm.ShippingDetails.PostCode" />
+        <div>PostCode</div>
+        <input @bind="CheckoutService.OrderForm.ShippingDetails.PostCode" />
 
-            <div>Country</div>
-            <input @bind="CheckoutService.OrderForm.ShippingDetails.Country" />
+        <div>Country</div>
+        <input @bind="CheckoutService.OrderForm.ShippingDetails.Country" />
 
+
+        <EditCart ShowCheckoutButton="false" />
+        @if (CheckoutService.CanCheckout())
+        {
             <button type="submit">Place Order</button>
-        </EditForm>
-    </div>
+        }
+    </EditForm>
+</div>
 
 <div></div>
 
 @code{
-
-
     protected override async Task OnInitializedAsync()
     {
+
     }
-
-
-
 }

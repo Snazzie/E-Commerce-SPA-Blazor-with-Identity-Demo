@@ -6,8 +6,8 @@ namespace Blazor.Shared
 {
     public class OrderFormModel
     {
-        public BillingShippingDetails ShippingDetails { get; set; }
-        public BillingShippingDetails BillingDetails { get; set; }
+        public BillingShippingDetails ShippingDetails { get; set; } = new BillingShippingDetails();
+        public BillingShippingDetails BillingDetails { get; set; } = new BillingShippingDetails();
         public CartItemModel[] Cart { get; set; }
 
     }

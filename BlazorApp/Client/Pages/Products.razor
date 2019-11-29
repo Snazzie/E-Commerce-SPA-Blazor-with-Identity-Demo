@@ -40,14 +40,8 @@ else
     <div>
         <div>Page @currentPage / @totalPages</div>
 
-        @if (currentPage > 1)
-        {
-            <button @onclick="@(() => GetPreviousPage())">Previous</button>
-        }
-        @if (currentPage < totalPages)
-        {
-            <button @onclick="@(() => GetNextPage())">Next</button>
-        }
+        <button @onclick="@(() => GetPreviousPage())" disabled="@(!(currentPage > 1))">Previous</button>
+        <button @onclick="@(() => GetNextPage())" disabled="@(!(currentPage < totalPages))">Next</button>
 
     </div>
 

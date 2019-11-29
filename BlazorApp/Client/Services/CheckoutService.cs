@@ -9,6 +9,8 @@ namespace Blazor.Client.Services
     public interface ICheckoutService
     {
         Task Checkout();
+        bool CanCheckout();
+
         OrderFormModel OrderForm { get; set; }
     }
 
@@ -16,12 +18,16 @@ namespace Blazor.Client.Services
     {
         private ICartService CartService { get; }
         public OrderFormModel OrderForm { get; set; }
+        public bool CanCheckout() => CartService.Cart.Count() > 0;
 
         public CheckoutService(ICartService cartService)
         {
             CartService = cartService;
             OrderForm = new OrderFormModel();
         }
+
+        
+
 
         public Task Checkout()
         {
