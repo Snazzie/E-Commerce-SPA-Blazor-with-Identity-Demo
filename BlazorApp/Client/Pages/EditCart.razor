@@ -68,7 +68,7 @@ else
         <hr />
         <div style="float:right">
             @{
-                <b>Subtotal (@CartService.Cart.Count() items): $@CartService.CalculateCost()</b>
+                <b>Subtotal (@CartService.Cart.Values.Select(v => v.Quantity).Sum() items): $@CartService.CalculateCost()</b>
                 <br />
                 @if (ShowCheckoutButton)
                 {
@@ -84,7 +84,7 @@ else
     [Parameter]
     public bool ShowCheckoutButton { get; set; } = true;
 
-    private List<CartItemModel> staticCart;
+    private List<CartItemModel> staticCart; // a snapshot of cart in cartservice
 
     protected override async Task OnInitializedAsync()
     {
