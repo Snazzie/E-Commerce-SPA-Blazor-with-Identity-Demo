@@ -27,14 +27,28 @@ else
             CartItemModel cartItem;
             if (isInCart)
             {
-                cartItem = CartService.Cart[product.Sku];
+                cartItem = CartService.EditableCart[product.Sku];
             }
             else
             {
                 cartItem = new CartItemModel() { ProductSku = product.Sku };
             }
 
-            <ProductCartItem Product="product" cartItemModel="@cartItem" IsInCart="isInCart" OnClick="@(async () => await CartService.UpdateCart(product.Sku, cartItem.Quantity))" />
+            int quantityInCart = 0;
+            try
+            {
+                quantityInCart = CartService.GetItemQuantityInCart(cartItem.ProductSku);
+            }
+            catch
+            {
+            }
+
+            var shouldDisableButton = ShouldDisableButton(cartItem.Quantity, quantityInCart) && CartService.CartContains(cartItem.ProductSku);
+            <ProductCartItem Product="product"
+                             cartItemModel="@cartItem"
+                             IsInCart="isInCart"
+                             UpdateButtonDisabled="false"
+                             OnClick="@(async () => await CartService.UpdateCart(product.Sku, cartItem.Quantity))" />
         }
     </div>
     <div>
@@ -75,5 +89,9 @@ else
         if (currentPage > 1)
             currentPage--;
         products = await ApiUsageService.PaginatedProducts(currentPage);
+    }
+    private bool ShouldDisableButton(int quantityInCart, int quantityInEditableCart)
+    {
+        return quantityInCart == quantityInEditableCart;
     }
 }

@@ -29,7 +29,7 @@ else
         <div>
             <EditForm Model="@cartItemModel" OnSubmit="@OnClick">
                 <InputNumber min="0" @bind-Value="@cartItemModel.Quantity" />
-                <button type="submit">@buttonText</button>
+                <button type="submit" disabled="@UpdateButtonDisabled">@buttonText</button>
             </EditForm>
         </div>
     </div>
@@ -46,5 +46,7 @@ else
 
     [Parameter]
     public Action OnClick { get; set; }
+    [Parameter]
+    public bool UpdateButtonDisabled { get; set; } = false;
 
 }

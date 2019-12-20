@@ -18,7 +18,7 @@ namespace Blazor.Client.Services
     {
         private ICartService CartService { get; }
         public OrderFormModel OrderForm { get; set; }
-        public bool CanCheckout() => CartService.Cart.Count() > 0;
+        public bool CanCheckout() => CartService.GetTotalItemsCountInCart() > 0;
 
         public CheckoutService(ICartService cartService)
         {

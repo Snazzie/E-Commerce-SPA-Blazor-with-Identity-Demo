@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ClientTests
 {
+    [TestFixture]
     public class CartServiceTests
     {
         private CartService cartService;
@@ -41,13 +42,13 @@ namespace ClientTests
             const int updateQuanity = 20;
 
             await cartService.UpdateCart(Sku, 1);
-            cartService.Cart.Keys.Should().Contain(Sku);
+            cartService.EditableCart.Keys.Should().Contain(Sku);
 
             await cartService.UpdateCart(Sku, updateQuanity);
-            cartService.Cart[Sku].Quantity.Should().Be(updateQuanity);
+            cartService.EditableCart[Sku].Quantity.Should().Be(updateQuanity);
 
             await cartService.UpdateCart(Sku, 0);
-            cartService.Cart.Keys.Should().NotContain(Sku);
+            cartService.EditableCart.Keys.Should().NotContain(Sku);
         }
 
     }
