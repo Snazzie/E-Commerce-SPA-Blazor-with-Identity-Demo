@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 <h3>Cart</h3>
 
-@if (CartService.Cart.Count == 0)
+@if (CartService.EditableCart.Count == 0)
 {
     <h5>There are no items in your cart.</h5>
 }
@@ -33,17 +33,17 @@ else
             </thead>
             <tbody>
                 @{
-                    foreach (var cartItemPair in CartService.Cart)
+                    foreach (var cartItem in CartService.EditableCart)
                     {
-                        var product = CartService.CartProducts.SingleOrDefault(s => s.Sku == cartItemPair.Value.ProductSku);
-                        var newPrice = product.Price * cartItemPair.Value.Quantity;
-                        var staticPrice = product.Price * staticCart.Single(i => i.ProductSku == cartItemPair.Value.ProductSku).Quantity;
+                        var product = CartService.CartProducts.Single(s => s.Sku == cartItem.Value.ProductSku);
+                        var newPrice = product.Price * cartItem.Value.Quantity;
+                        var staticPrice = product.Price * CartService.GetItemQuantityInCart(cartItem.Value.ProductSku);
 
                         <tr>
                             <td>@product.Title</td>
                             <td>
-                                <EditForm Model="cartItemPair" OnSubmit="(async () => await CartService.UpdateCart(product.Sku, cartItemPair.Value.Quantity))">
-                                    <InputNumber min="0" @bind-Value="@cartItemPair.Value.Quantity" />
+                                <EditForm Model="cartItem" OnSubmit="(async () => await CartService.UpdateCart(cartItem.Value.ProductSku, cartItem.Value.Quantity))">
+                                    <InputNumber min="0" @bind-Value="@cartItem.Value.Quantity" />
                                     <button type="submit">Update</button>
                                 </EditForm>
                             </td>
@@ -59,7 +59,7 @@ else
                                 }
                             }
 
-                            <td><button @onclick="@(async () => await CartService.UpdateCart(product.Sku, 0))">Remove</button></td>
+                            <td><button @onclick="@(async () => await CartService.UpdateCart(cartItem.Value.ProductSku, 0))">Remove</button></td>
                         </tr>
                     }
                 }
@@ -68,7 +68,7 @@ else
         <hr />
         <div style="float:right">
             @{
-                <b>Subtotal (@CartService.Cart.Values.Select(v => v.Quantity).Sum() items): $@CartService.CalculateCost()</b>
+                <b>Subtotal (@CartService.GetTotalItemsCountInCart() items): $@CartService.CalculateCost()</b>
                 <br />
                 @if (ShowCheckoutButton)
                 {
@@ -84,21 +84,9 @@ else
     [Parameter]
     public bool ShowCheckoutButton { get; set; } = true;
 
-    private List<CartItemModel> staticCart; // a snapshot of cart in cartservice
-
     protected override async Task OnInitializedAsync()
     {
-        EventService.CartUpdated += OnCartUpdated;
 
-        OnCartUpdated();
     }
 
-    private void OnCartUpdated()
-    {
-        staticCart = CartService.Cart.Values.Select(i => new CartItemModel()
-        {
-            ProductSku = i.ProductSku,
-            Quantity = i.Quantity
-        }).ToList();
-    }
 }
