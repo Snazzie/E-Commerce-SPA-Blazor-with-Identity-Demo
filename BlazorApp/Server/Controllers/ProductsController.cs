@@ -4,10 +4,12 @@ using Blazor.Server.Stores;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Blazor.Shared.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Blazor.Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductsController : ControllerBase, IProductsApi
     {
         private readonly ProductStore m_ProductStore;
