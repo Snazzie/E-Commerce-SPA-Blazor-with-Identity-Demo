@@ -1,11 +1,9 @@
 using Blazor.Extensions.Storage;
 using Blazor.Client.Services;
 using Microsoft.AspNetCore.Components.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
+using Blazored.LocalStorage;
 
 namespace Blazor.Client
 {
@@ -19,6 +17,11 @@ namespace Blazor.Client
             services.AddSingleton<IApiUsageService, ApiUsageService>();
             services.AddScoped<ICheckoutService, CheckoutService>();
             services.AddSingleton<ISessionStorageService, SessionStorageService>();
+
+            services.AddBlazoredLocalStorage();
+            services.AddAuthorizationCore();
+            services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+            services.AddScoped<IAuthService, AuthService>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

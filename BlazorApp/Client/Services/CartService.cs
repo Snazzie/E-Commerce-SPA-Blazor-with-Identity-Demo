@@ -1,7 +1,4 @@
-﻿using Blazor.Client.Pages;
-using Blazor.Client.Shared;
-using Blazor.Shared;
-using System;
+﻿using Blazor.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

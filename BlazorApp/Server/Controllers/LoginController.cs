@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Blazor.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -54,20 +55,5 @@ namespace Blazor.Server.Controllers
             return Ok(new LoginResult { Successful = true, Token = new JwtSecurityTokenHandler().WriteToken(token) });
         }
     }
-    public class LoginModel
-    {
-        [Required]
-        public string Email { get; set; }
 
-        [Required]
-        public string Password { get; set; }
-
-        public bool RememberMe { get; set; }
-    }
-    public class LoginResult
-    {
-        public bool Successful { get; set; }
-        public string Error { get; set; }
-        public string Token { get; set; }
-    }
 }
