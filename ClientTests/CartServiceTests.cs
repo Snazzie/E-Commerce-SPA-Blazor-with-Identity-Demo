@@ -10,13 +10,12 @@ namespace ClientTests
     {
         private CartService cartService;
         private readonly IEventService eventsService = Substitute.For<IEventService>();
-        private readonly ISessionStorageService sessionStorageService = Substitute.For<ISessionStorageService>();
         private readonly IApiUsageService apiUsageService = Substitute.For<IApiUsageService>();
 
         [SetUp]
         public void Setup()
         {
-            cartService = new CartService(eventsService, sessionStorageService, apiUsageService);
+            cartService = new CartService(eventsService, apiUsageService);
         }
 
         [Test]
