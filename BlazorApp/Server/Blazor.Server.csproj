@@ -5,6 +5,7 @@
     <LangVersion>8.0</LangVersion>
     <AssemblyName>Blazor.Server</AssemblyName>
     <RootNamespace>Blazor.Server</RootNamespace>
+    <UserSecretsId>f91338b4-a83c-4136-b6ff-e98022fc7d60</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
