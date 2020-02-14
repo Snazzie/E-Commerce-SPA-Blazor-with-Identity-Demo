@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Blazor.Shared;
 using Blazor.Shared.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blazor.Server.Controllers
@@ -9,6 +10,7 @@ namespace Blazor.Server.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CheckoutController : ControllerBase, ICheckoutApi
     {
 

@@ -1,7 +1,4 @@
-﻿using Blazor.Client.Pages;
-using Blazor.Client.Shared;
-using Blazor.Shared;
-using System;
+﻿using Blazor.Shared;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,23 +23,18 @@ namespace Blazor.Client.Services
 
         public List<ProductModel> CartProducts { get; private set; } = new List<ProductModel>();
         public Dictionary<string, CartItemModel> Cart { get; set; } = new Dictionary<string, CartItemModel>();
-        public ISessionStorageService SessionStorageService { get; }
         public IApiUsageService ApiUsageService { get; }
 
         private readonly IEventService EventsService;
 
-        public CartService(IEventService eventsService, ISessionStorageService sessionStorageService, IApiUsageService apiUsageService)
+        public CartService(IEventService eventsService, IApiUsageService apiUsageService)
         {
             EventsService = eventsService;
-            SessionStorageService = sessionStorageService;
             ApiUsageService = apiUsageService;
 
         }
         public async Task Initialize()
         {
-            var result = await SessionStorageService.GetCartFromSessionStorage();
-            if (result != null)
-                Cart = result;
             await UpdateCartProductsCache();
         }
 
@@ -66,7 +58,6 @@ namespace Blazor.Client.Services
             }
 
 
-            await SessionStorageService.UpdateSessionStorageCart(Cart);
             await UpdateCartProductsCache();
             EventsService.NotifyCartUpdated();
         }
