@@ -16,7 +16,6 @@ namespace Blazor.Client
             services.AddSingleton<ICartService, CartService>();
             services.AddSingleton<IApiUsageService, ApiUsageService>();
             services.AddScoped<ICheckoutService, CheckoutService>();
-            services.AddSingleton<ISessionStorageService, SessionStorageService>();
 
             services.AddBlazoredLocalStorage();
             services.AddAuthorizationCore();

@@ -9,12 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 namespace Blazor.Server.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class ProductsController : ControllerBase, IProductsApi
     {
-        private readonly ProductStore m_ProductStore;
+        private readonly IStore<ProductModel> m_ProductStore;
 
-        public ProductsController(ProductStore productStore)
+        public ProductsController(IStore<ProductModel> productStore)
         {
             m_ProductStore = productStore;
         }
