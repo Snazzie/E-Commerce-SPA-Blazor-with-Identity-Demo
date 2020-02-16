@@ -341,3 +341,4 @@ healthchecksdb
 
 **/wwwroot/styles/*.css
 **/wwwroot/styles/*.min.css
+appsettings.Production.json
